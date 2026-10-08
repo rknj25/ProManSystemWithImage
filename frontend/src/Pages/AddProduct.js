@@ -35,8 +35,18 @@ const AddProduct = () => {
       data.append("userId",user.id);
       data.append("image",image);
 
-      const response=await axios.post("http://localhost:9999/api/pro",data);
-      alert("Product Added successfully");
+      // const response=await axios.post("http://localhost:9999/api/pro",data);
+      // alert("Product Added successfully");
+//       const response = await axios.post(
+//     `${API_URL}/api/pro`,
+//     formData
+// );
+const response = await axios.post(
+    `${API_URL}/api/pro`,
+    formData
+);
+
+alert(response.data.message);
       navigate("/dashboard");
     }
     catch(error){
@@ -60,3 +70,4 @@ const AddProduct = () => {
 }
 
 export default AddProduct
+
