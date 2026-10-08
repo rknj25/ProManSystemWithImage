@@ -3,9 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditProduct = () => {
-
   const { id } = useParams();
-
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -16,41 +14,35 @@ const EditProduct = () => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    getProduct();
-  }, []);
+    const getProduct = async () => {
+      try {
+        const response = await axios.get(
+          "https://promansystemwithimage.onrender.com/api/pro/getdata"
+        );
 
-  const getProduct = async () => {
+        const product = response.data.find(
+          (item) => item._id === id
+        );
 
-    try {
-
-      const response = await axios.get(
-        `http://localhost:9999/api/pro/getdata`
-      );
-
-      const product = response.data.find(
-        (item) => item._id === id
-      );
-
-      if (product) {
-        setName(product.name);
-        setPrice(product.price);
-        setCategory(product.category);
-        setDescription(product.description);
-        setQuantity(product.quantity);
+        if (product) {
+          setName(product.name);
+          setPrice(product.price);
+          setCategory(product.category);
+          setDescription(product.description);
+          setQuantity(product.quantity);
+        }
+      } catch (error) {
+        console.log(error);
       }
+    };
 
-    } catch (error) {
-      console.log(error);
-    }
-
-  };
+    getProduct();
+  }, [id]);
 
   const handleUpdate = async (e) => {
-
     e.preventDefault();
 
     try {
-
       const formData = new FormData();
 
       formData.append("name", name);
@@ -64,31 +56,24 @@ const EditProduct = () => {
       }
 
       const response = await axios.put(
-        `http://localhost:9999/api/pro/update/${id}`,
+        `https://promansystemwithimage.onrender.com/api/pro/update/${id}`,
         formData
       );
 
       alert(response.data.message);
 
       navigate("/dashboard");
-
     } catch (error) {
-
       console.log(error);
-
       alert("Product update failed");
-
     }
-
   };
 
   return (
     <div>
-
       <h2>Update Product</h2>
 
       <form onSubmit={handleUpdate} className="form-container">
-
         <input
           type="text"
           placeholder="Product Name"
@@ -143,9 +128,7 @@ const EditProduct = () => {
         <button type="submit">
           Update Product
         </button>
-
       </form>
-
     </div>
   );
 };
